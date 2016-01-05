@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>A Simple Draw Program</title>
+    <script src="View.js"></script>
+    <script src="Scene.js"></script>
+    <script src="Shape.js"></script>
+    <script src="RectangleShape.js"></script>
+    <script src="CircleShape.js"></script>
+    <script src="TriangleShape.js"></script>
+    <script src="SquareShape.js"></script>
+    <script src="Shape.ShapeType.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+    <script>
+        var view = new View();
+//        var picture = [
+//            {
+//                type: Shape.ShapeType.RECTANGLE,
+//                color: 'Green',
+//                x: 0.2,
+//                y: 0.2,
+//                width: 0.4,
+//                height: 0.25,
+//                outline: 'Red'
+//            },
+//            {
+//                type: Shape.ShapeType.SQUARE,
+//                color: 'Blue',
+//                x: 0.8,
+//                y: 0.2,
+//                size: 0.25,
+//                outline: 'Red'
+//            },
+//            {
+//                type: Shape.ShapeType.TRIANGLE,
+//                color: 'Yellow',
+//                x: 0.3,
+//                y: 0.7,
+//                width: 0.10,
+//                height: 0.25,
+//                outline: 'Blue'
+//            },
+//            {
+//                type: Shape.ShapeType.CIRCLE,
+//                color: 'Blue',
+//                x: 0.8,
+//                y: 0.8,
+//                radius: 0.125,
+//                outline: 'Yellow'
+//            }
+//        ];
+        var picture = [
+            {type: Shape.ShapeType.RECTANGLE, x: 0.5, y: 0.8, width: 1.0, height: 0.4, color: "Green"},
+            {type: Shape.ShapeType.RECTANGLE, x: 0.5, y: 0.3, width: 1.0, height: 0.6, color: "SkyBlue"},
+            {type: Shape.ShapeType.RECTANGLE, x: 0.75, y: 0.65, width: 0.02, height: 0.044, color: "SaddleBrown"},
+            {type: Shape.ShapeType.TRIANGLE, x: 0.75, y: 0.568, width: 0.06, height: 0.12, color: "DarkGreen"},
+            {type: Shape.ShapeType.RECTANGLE, x: 0.89, y: 0.7, width: 0.05, height: 0.25, color: "Sienna"},
+            {type: Shape.ShapeType.CIRCLE, x: 0.89, y: 0.4875, radius: 0.1, color: "SeaGreen"},
+            {type: Shape.ShapeType.RECTANGLE, x: 0.4, y: 0.6, width: 0.4, height: 0.3, color: "Salmon", outline: "Black"},
+            {type: Shape.ShapeType.TRIANGLE, x: 0.4, y: 0.3, width: 0.6, height: 0.3, color: "Salmon", outline: "Black"},
+            {type: Shape.ShapeType.RECTANGLE, x: 0.35, y: 0.675, width: 0.1, height: 0.15, color: "Tomato", outline: "Black"},
+            {type: Shape.ShapeType.SQUARE, x: 0.5, y: 0.6, size: 0.12, color: "Tomato", outline: "Black"},
+            {type: Shape.ShapeType.SQUARE, x: 0.5, y: 0.6, size: 0.1, color: "Gray", outline: "Black"},
+            {type: Shape.ShapeType.CIRCLE, x: 0.32, y: 0.675, radius: 0.01, color: "Yellow", outline: "Black"},
+            {type: Shape.ShapeType.CIRCLE, x: 0.8, y: 0.1, radius: 0.05, color: "Yellow"}
+        ];
+        view.createScene(picture);
+        window.addEventListener('resize', function() { view.resize(); }, false);
+    </script>
+
+
+</head>
+<body onload="view.resize();">
+
+    <canvas id="canvas" height="400" width="600"></canvas>
+
+</body>
+</html>
