@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RealText Editor</title>
+    <link rel="stylesheet" href="richTextEditor.css" type="text/css">
+    <script src="RichTextEditor.js"></script>
+    <script>
+        function init() {
+            var boxes = document.getElementsByClassName('rte_box');
+            for (var i = 0; i < boxes.length; i++) {
+                new RichTextEditor(boxes[i], function(html) {
+                    document.getElementById('results').innerHTML = html;
+                });
+            }
+        }
+    </script>
+</head>
+<body onload="init()">
+
+    <div id="edit1" class="rte_box" style="width: 600px; min-height: 400px"></div>
+    <p></p>
+
+    <div id="edit2" class="rte_box" style="width: 600px; min-height: 400px"></div>
+    <p></p>
+
+    <div id="results"></div>
+
+</body>
+</html>
