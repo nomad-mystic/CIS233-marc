@@ -50,13 +50,14 @@ function ToolButton(tool)
     };
 }
 
-function EditToolButton(tool)
+function EditToolButton(tool, editor)
 {
     // Extends ToolButton
     var parent = new ToolButton(tool);
 
     var execute = function()
     {
+        editor.focus();
         document.execCommand(tool.command, false, false);
         this.update();
     };
@@ -78,7 +79,64 @@ function EditToolButton(tool)
         }
     }
 }
+function HtmlToolButton(tool, editor)
+{
+    // Extends ToolButton
+    var parent = new ToolButton(tool);
+    var mode = 'HTML';
 
+    console.log(parent);
+    var execute = function()
+    {
+        if (mode == 'HTML') {
+            mode = 'text';
+            var html = editor.innerHTML;
+            editor.contentEditable = false;
+            var pre = document.createElement('pre');
+            pre.className = 'html_text';
+            if (pre.innerText === undefined) {
+                pre.textContent = html;
+            } else {
+                pre.innerText = html;
+            }
+            editor.innerHTML = '';
+            editor.appendChild(pre);
+            pre.contentEditable = true;
+        } else {
+            mode = 'HTML';
+            var pre = editor.firstChild;
+            var text;
+            if (pre.innerText === undefined) {
+                text = pre.textContent;
+            } else {
+                text = pre.innerText;
+            }
+            editor.innerHTML = text;
+            editor.contentEditable = true;
+        }
+        this.update();
+    };
+
+    parent.getButton().addEventListener('click', execute.bind(this));
+
+    this.getButton = function() {
+        return parent.getButton();
+    };
+
+    this.update = function()
+    {
+        if (mode == 'text') {
+            parent.setActive();
+        } else {
+            parent.setInactive();
+        }
+    }
+
+    this.getMode = function()
+    {
+        return mode;
+    };
+}
 function RightToolButton(tool)
 {
     var parent = new ToolButton(tool);
@@ -93,28 +151,7 @@ function RightToolButton(tool)
 // Main Class to Create Elements for the Rich Text Editing Area
 function RichTextEditor(parent, callback)
 {
-    // Creating the edit buttons and connecting CSS
-    var editButton = document.createElement('div');
-    editButton.innerHTML = '[edit]';
-    editButton.className = 'edit_button';
-
-    // Creating the tool bar area
-    var toolBar = document.createElement('div');
-    toolBar.className = 'edit_tools';
-
-    var submitButton = new RightToolButton({title: 'Submit', command: '', image: 'submit.png'}).getButton();
-
-    // Creating button to show inside text editor toolBar come form Classes
-    var buttons = tools.map(function(tool)
-    {
-        var tool = new EditToolButton(tool);
-        var button = tool.getButton();
-        toolBar.appendChild(button);
-        return tool;
-    });
-
-
-    toolBar.appendChild(submitButton);
+    var backup;
 
     // creating editor box and fitting it to the rte_box-es
     var editor = document.createElement('div');
@@ -124,17 +161,62 @@ function RichTextEditor(parent, callback)
     editor.style.width = parent.clientWidth + 'px';
     editor.style.height = parent.clientHeight + 'px';
 
+    // Creating the edit buttons and connecting CSS
+    var editButton = document.createElement('div');
+    editButton.innerHTML = '[edit]';
+    editButton.className = 'edit_button';
+
+    // Creating the tool bar area
+    var toolBar = document.createElement('div');
+    toolBar.className = 'edit_tools';
+
+    // Custom buttons
+    var cancelButton = new RightToolButton({title: 'Cancel', command: "", image: 'cancel.png'}).getButton();
+    var submitButton = new RightToolButton({title: 'Submit', command: "", image: 'submit.png'}).getButton();
+
+    var htmlTool = new HtmlToolButton({title: 'HTML', command: "", image: 'html.png'}, editor);
+    var htmlButton = htmlTool.getButton();
+
+    toolBar.appendChild(htmlButton);
+    // Creating button to show inside text editor toolBar come form Classes
+    var buttons = tools.map(function(tool)
+    {
+        var tool = new EditToolButton(tool, editor);
+        var button = tool.getButton();
+        toolBar.appendChild(button);
+        return tool;
+    });
+    // Adding Custom Buttons
+    buttons.push(htmlTool);
+    toolBar.appendChild(submitButton);
+    toolBar.appendChild(cancelButton);
+
     // Function for when edit button is clicked
     var edit = function()
     {
+        backup = editor.innerHTML;
+        if (backup === '') {
+            editor.innerHTML = '<div></div>';
+        }
         editor.contentEditable = true;
         parent.replaceChild(toolBar, editButton);
         //editor.style.height = parseInt(editor.style.height) - toolBar.clientHeight + 'px';
         editor.focus();
     };
-    var submit = function() {
+    var cancel = function()
+    {
+        editor.innerHTML = backup;
         editor.contentEditable = false;
-        //editor.style.height = parent.clientHeight + 'px';
+        editor.style.height = parent.clientHeight + 'px';
+        parent.replaceChild(editButton, toolBar);
+    };
+    var submit = function() {
+        var mode = htmlTool.getMode();
+        if (mode == 'text') {
+            htmlButton.click();
+        }
+        editor.contentEditable = false;
+        editor.style.height = parent.clientHeight + 'px';
         parent.replaceChild(editButton, toolBar);
         callback(editor.innerHTML);
     };
@@ -148,6 +230,7 @@ function RichTextEditor(parent, callback)
 
     // Edit and Submit click events
     submitButton.addEventListener('click', submit);
+    cancelButton.addEventListener('click', cancel);
     editButton.addEventListener('click', edit);
     editor.addEventListener('click', update);
     editor.addEventListener('keyup', update);

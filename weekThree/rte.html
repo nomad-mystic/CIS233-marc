@@ -10,9 +10,11 @@
         function init() {
             var boxes = document.getElementsByClassName('rte_box');
             for (var i = 0; i < boxes.length; i++) {
-                new RichTextEditor(boxes[i], function(html) {
-                    document.getElementById('results').innerHTML = html;
-                });
+                new RichTextEditor(boxes[i], function(id) {
+                    return function(html) {
+                        document.getElementById('results').innerHTML = 'Editor: ' + id + '<br>' + html;
+                    }
+                }(boxes[i].id));
             }
         }
     </script>
