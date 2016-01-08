@@ -34,20 +34,34 @@ function ToolButton(tool)
     };
 
     this.setActive = function() {
+        var className = image.className;
 
+        if (className != 'active_tool_button_image') {
+            image.className = 'active_tool_button_image';
+        }
+    };
+
+    this.setInactive = function() {
+        var className = image.className;
+
+        if (className != 'tool_button_image') {
+            image.className = 'tool_button_image';
+        }
     };
 }
 
 function EditToolButton(tool)
 {
+    // Extends ToolButton
     var parent = new ToolButton(tool);
 
     var execute = function()
     {
         document.execCommand(tool.command, false, false);
+        this.update();
     };
 
-    parent.getButton().addEventListener('click', execute);
+    parent.getButton().addEventListener('click', execute.bind(this));
 
     this.getButton = function() {
         return parent.getButton();
@@ -88,11 +102,18 @@ function RichTextEditor(parent, callback)
     var toolBar = document.createElement('div');
     toolBar.className = 'edit_tools';
 
-    // Creating button to show inside text editor toolBar come form Classes
     var submitButton = new RightToolButton({title: 'Submit', command: '', image: 'submit.png'}).getButton();
-    var boldButton = new EditToolButton({title: 'Bold', command: 'bold', image: 'bold.png'}).getButton();
 
-    toolBar.appendChild(boldButton);
+    // Creating button to show inside text editor toolBar come form Classes
+    var buttons = tools.map(function(tool)
+    {
+        var tool = new EditToolButton(tool);
+        var button = tool.getButton();
+        toolBar.appendChild(button);
+        return tool;
+    });
+
+
     toolBar.appendChild(submitButton);
 
     // creating editor box and fitting it to the rte_box-es
@@ -117,11 +138,21 @@ function RichTextEditor(parent, callback)
         parent.replaceChild(editButton, toolBar);
         callback(editor.innerHTML);
     };
+    var update = function()
+    {
+        buttons.forEach(function(button)
+        {
+            button.update();
+        });
+    };
 
     // Edit and Submit click events
     submitButton.addEventListener('click', submit);
     editButton.addEventListener('click', edit);
-
+    editor.addEventListener('click', update);
+    editor.addEventListener('keyup', update);
+    editor.addEventListener('keydown', update);
+    editor.addEventListener('keypress', update);
     parent.appendChild(editor);
     parent.appendChild(editButton);
 }

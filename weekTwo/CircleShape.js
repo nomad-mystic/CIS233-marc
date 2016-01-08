@@ -37,4 +37,5 @@ CircleShape.prototype.draw = function(context, width, height)
 function CircleShape(properties)
 {
     this.properties = properties;
+
 }
