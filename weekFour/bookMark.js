@@ -10,7 +10,7 @@ javascript:(
             var loaded = false;
 
             try {
-                loaded = __WCAG_LOADED__;
+                loaded = checkDocumentWCAG;
             }
             catch(err) {
             }
