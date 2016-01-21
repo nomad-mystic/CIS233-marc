@@ -19,11 +19,11 @@ javascript:(
                 fileRef = document.createElement('link');
                 fileRef.rel = 'stylesheet';
                 fileRef.type = 'text/css';
-                fileRef.href = 'http://localhost:8080/CIS233Marc/weekFour/wcag.css';
+                fileRef.href = 'http://localhost:8080/CIS233Marc/accessibilityCalculator/wcag.css';
                 document.getElementsByTagName('head')[0].appendChild(fileRef);
 
                 fileRef = document.createElement('script');
-                fileRef.src = "http://localhost:8080/CIS233Marc/weekFour/wcag.js";
+                fileRef.src = "http://localhost:8080/CIS233Marc/accessibilityCalculator/wcag.js";
                 fileRef.type = 'text/javascript';
                 document.getElementsByTagName('head')[0].appendChild(fileRef);
             } else {
