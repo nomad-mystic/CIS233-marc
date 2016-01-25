@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Testing Ajax</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+</head>
+<body>
+
+<div id="div"></div>
+<script>
+   function createCORSRequest(method, url) {
+       var xhr = new XMLHttpRequest();
+       if ('withCredentials' in xhr) {
+           // Check if the XMLHttpRequest object has a "withCredentials" property.
+           // "withCredentials" only exists on XMLHTTPRequest2 objects.
+           xhr.open(method, url, true);
+       } else if (typeof XDomainRequest != 'undefined') {
+           // for IE only ones with XDomainRequest
+           xhr = new XDomainRequest();
+           xhr.open(method, url);
+       } else {
+           xhr = null;
+       }
+       return xhr;
+
+   } // end createCORSRequest
+   var xhr = createCORSRequest('GET', url);
+   xhr.withCredentials = true;
+//   Access-control-Allow-Credentials: true
+   if(!xhr) {
+       throw new Error('CORS not Supported');
+   }
+
+   xhr.onload = function() {
+       var responseText = xhr.responseText
+       console.log(responseText);
+   };
+   xhr.onerror = function() {
+       consol.log9('This was an error');
+   }
+</script>
+<button id="testingClickButton">Testing Click Ajax</button>
+<div id="textDiv"></div>
+
+
+</body>
+</html>
