@@ -9,92 +9,36 @@
 
 <div id="div"></div>
 <script>
-    var text = [{
-            name: "Lottery Powerball Winning Numbers: Beginning 2010",
-            attribution: "New York State Gaming Commission",
-            attributionLink: "http://nylottery.ny.gov/wps/portal/Home/Lottery/home/your+lottery/drawing+results/drawingresults_powerball",
-            averageRating: 0,
-            category: "Government & Finance",
-            createdAt: 1362178006,
-            description: "Go to http://on.ny.gov/1GpWiHD on the New York Lottery website for past Powerball results and payouts.",
-            displayType: "table"
+   function createCORSRequest(method, url) {
+       var xhr = new XMLHttpRequest();
+       if ('withCredentials' in xhr) {
+           // Check if the XMLHttpRequest object has a "withCredentials" property.
+           // "withCredentials" only exists on XMLHTTPRequest2 objects.
+           xhr.open(method, url, true);
+       } else if (typeof XDomainRequest != 'undefined') {
+           // for IE only ones with XDomainRequest
+           xhr = new XDomainRequest();
+           xhr.open(method, url);
+       } else {
+           xhr = null;
+       }
+       return xhr;
 
-        },
-        {
-            name: "Lottery Powerball Winning Numbers: Beginning 2010",
-            attribution: "New York State Gaming Commission",
-            attributionLink: "http://nylottery.ny.gov/wps/portal/Home/Lottery/home/your+lottery/drawing+results/drawingresults_powerball",
-            averageRating: 0,
-            category: "Government & Finance",
-            createdAt: 1362178006,
-            description: "Go to http://on.ny.gov/1GpWiHD on the New York Lottery website for past Powerball results and payouts.",
-            displayType: "table"
-        }];
-    var output = '';
-    var div = document.getElementById('div');
-    var picture = '<img src="' + text.hdurl + '">';
-//            for (var i = 0; i < text.length; i++) {
-//    div.innerHTML = text.copyright + picture;
-//                console.log(text[i]);
-//            }
-    for (var prop in text) {
-        if(text.hasOwnProperty(prop)) {
+   } // end createCORSRequest
+   var xhr = createCORSRequest('GET', url);
+   xhr.withCredentials = true;
+//   Access-control-Allow-Credentials: true
+   if(!xhr) {
+       throw new Error('CORS not Supported');
+   }
 
-            output += 'prop: ' + prop + ' value: ' + text[prop].createdAt + "<br>";
-            output += '<p>' + prop + ' value: ' + text[prop].name + "</p>";
-
-        }
-    }
-    div.innerHTML += '<p>' + output + '</p>';
-    console.log(output);
-
-</script>
-<script>
-    $(document).ready(function() {
-
-        var testingClickButton;
-
-        testingClickButton = $('#testingClickButton');
-        var testingClick = function() {
-            $.getJSON('https://data.cityofnewyork.us/resource/uzvg-ra63.json', function(data) {
-                var JSONOutput = '';
-                for(var prop in data) {
-                    if(data.hasOwnProperty(prop)) {
-                        JSONOutput += '<p>This is the borough of the School ' + data[prop].borough;
-                        JSONOutput += ' number_tested ' + data[prop].number_tested;
-                        JSONOutput += ' mean scale score ' + data[prop].mean_scale_score + '</p>';
-                    }
-                }
-                console.log(JSONOutput);
-                var text = document.getElementById('textDiv');
-                text.innerHTML = JSONOutput;
-//                $('.textDiv').text(JSONOutput);
-            });
-        };
-        var closure = function(x, fName, lName) {
-//            var firstName = fName;
-//            var lastName = lName;
-            var object = {
-                firstName: fName,
-                lastName: lName
-            };
-            function makeTalk() {
-                console.log(object.firstName + ' ' + object.lastName + ' ' + x);
-                return object;
-            }
-
-            return makeTalk;
-        };
-        var myClosure1 = closure(10, 'keith' , 'murphy');
-        var myClosure2 = closure(30, 'Nick', 'Smith');
-
-        testingClickButton.on('click', function() {
-           var object = myClosure1();
-            myClosure2();
-            console.log(object.firstName);
-
-        }); // end testingClickButton
-    }); // end ready
+   xhr.onload = function() {
+       var responseText = xhr.responseText
+       console.log(responseText);
+   };
+   xhr.onerror = function() {
+       consol.log9('This was an error');
+   }
 </script>
 <button id="testingClickButton">Testing Click Ajax</button>
 <div id="textDiv"></div>

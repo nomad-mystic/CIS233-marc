@@ -9,36 +9,47 @@
 
 <div id="div"></div>
 <script>
-   function createCORSRequest(method, url) {
-       var xhr = new XMLHttpRequest();
-       if ('withCredentials' in xhr) {
-           // Check if the XMLHttpRequest object has a "withCredentials" property.
-           // "withCredentials" only exists on XMLHTTPRequest2 objects.
-           xhr.open(method, url, true);
-       } else if (typeof XDomainRequest != 'undefined') {
-           // for IE only ones with XDomainRequest
-           xhr = new XDomainRequest();
-           xhr.open(method, url);
-       } else {
-           xhr = null;
-       }
-       return xhr;
+    /**
+     * Make a X-Domain request to url and callback.
+     *
+     * @param url {String}
+     * @param method {String} HTTP verb ('GET', 'POST', 'DELETE', etc.)
+     * @param data {String} request body
+     * @param callback {Function} to callback on completion
+     * @param errback {Function} to callback on error
+     */
+    function xdr(url, method, data, callback, errback) {
+        var req;
 
-   } // end createCORSRequest
-   var xhr = createCORSRequest('GET', url);
-   xhr.withCredentials = true;
-//   Access-control-Allow-Credentials: true
-   if(!xhr) {
-       throw new Error('CORS not Supported');
-   }
+        if(XMLHttpRequest) {
+            req = new XMLHttpRequest();
 
-   xhr.onload = function() {
-       var responseText = xhr.responseText
-       console.log(responseText);
-   };
-   xhr.onerror = function() {
-       consol.log9('This was an error');
-   }
+            if('withCredentials' in req) {
+                req.open(method, url, true);
+                req.onerror = errback;
+                req.onreadystatechange = function() {
+                    if (req.readyState === 4) {
+                        if (req.status >= 200 && req.status < 400) {
+                            callback(req.responseText);
+                        } else {
+                            errback(new Error('Response returned with non-OK status'));
+                        }
+                    }
+                };
+                req.send(data);
+            }
+        } else if(XDomainRequest) {
+            req = new XDomainRequest();
+            req.open(method, url);
+            req.onerror = errback;
+            req.onload = function() {
+                callback(req.responseText);
+            };
+            req.send(data);
+        } else {
+            errback(new Error('CORS not supported'));
+        }
+    }
 </script>
 <button id="testingClickButton">Testing Click Ajax</button>
 <div id="textDiv"></div>
