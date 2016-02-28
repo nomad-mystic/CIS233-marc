@@ -1,0 +1,17 @@
+#department_combo {
+	width: 300px;
+	font: 12px arial,sans-serif;
+	vertical-align: middle;
+	padding: 3px 6px;
+	margin: 0px;
+	border: 1px solid DarkGray;
+}
+#mentor_search {
+	border: 1px solid DarkGray;
+	padding: 3px;
+	vertical-align: middle;
+}
+#mentor_search:hover {
+	cursor: pointer;
+	background-color: LightGray;
+}

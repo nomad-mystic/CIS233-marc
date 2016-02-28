@@ -1,0 +1,14 @@
+.combo_list {
+	font: 12px arial,sans-serif;
+	box-shadow: 2px 5px 5px #DDDDDD;
+	line-height: 16px;
+	background-color: White;
+	border: 1px solid black;
+}
+.combo_item_selected {
+	background-color: LightGray;
+	cursor: pointer;
+}
+.combo_item_unselected {
+	cursor: pointer;
+}
